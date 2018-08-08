@@ -212,8 +212,9 @@ function Test-Executor {
     $testsArray += Test-Runner "docker exec $containerName ls" "Exec_Process_In_Container_Test"
     $testsArray += Test-Runner "docker restart $containerName" "Restart_Container_Test"
 
-    $newProcess = Get-Process vmmem
-    $workinginfo = ProcessWorkingSetInfoById $newProcess.id
+    #$newProcess = Get-Process vmmem
+    #$workinginfo = ProcessWorkingSetInfoById $newProcess.id
+
     $UVM = Get-ComputeProcess
     $memoryUsedByUVMOS=hcsdiag exec -uvm $UVM.id free
 

@@ -1,3 +1,3 @@
 FROM nginx
 
-RUN mkdir /test
+CMD ["mkdir", "/test"]

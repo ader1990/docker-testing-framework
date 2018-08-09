@@ -198,16 +198,14 @@ function Test-Executor {
     $testsArray += Test-Runner "docker network create -d nat $networkName" "Create_Network_Test"
 
     # tests on a container built from Dockerfile
-    $testsArray += Test-Runner "docker build -f $configPath -t $imageName ." "Build_Container_Test"
-    $testsArray += Test-Runner "docker run --name $containerName -d -p 8080:80 -v $bindMountPath $imageName" "Start_Built_Container_Test"
-    $testsArray += Test-Runner "docker exec $containerName ls /test" "Built_Container_Shared_Volume_Test"
+    $testsArray += Test-Runner "docker build -f $configPath -t $builtContainerImageName ." "Build_Container_Test"
+    $testsArray += Test-Runner "docker run --name $containerName -d -p 8080:80 -v $bindMountPath $builtContainerImageName" "Start_Built_Container_Test"
+    $testsArray += Test-Runner "docker exec $containerName ls /test/test.txt" "Built_Container_Shared_Volume_Test"
     $testsArray += Test-Runner "docker stop $containerName" "Stop_Built_Container_Test"
     $testsArray += Test-Runner "docker rm $containerName" "Remove_Built_Container_Test"
 
     # tests on a container created normally, not built from Dockerfile
     $testsArray += Test-CreateContainer -containerName $containerName -containerImage $imageName -exposePorts -nodePort $nodePort -containerPort $containerPort
-    # TODO
-    #$testsArray += Test-Runner "docker network connect $networkName $containerName" "ConnectNetworkTest"
     $testsArray += Test-Runner "docker start $containerName" "Start_Container_Test"
     $testsArray += Test-Runner "docker exec $containerName ls" "Exec_Process_In_Container_Test"
     $testsArray += Test-Runner "docker restart $containerName" "Restart_Container_Test"
@@ -233,17 +231,13 @@ function Test-Executor {
 
 
     Clear-Environment
-
-    Write-Output "================================================================" >> tests.log
-    Write-Output "Tests PASSED" >> tests.log
-    Write-Output "================================================================" >> tests.log
 }
 
-$env:PATH = "C:\Users\dan\go\src\github.com\docker\docker\bundles\;" + $env:PATH
+$env:PATH = "C:\go\src\github.com\docker\docker\bundles\;" + $env:PATH
 # execution starts here
 
 $dockerVersion = docker version
-#Write-Output $dockerVersion 
+
 $dockerVersion > tests.log
 "`n`n" >> tests.log
 
